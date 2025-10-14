@@ -1,0 +1,33 @@
+steps:
+  # Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/saas-starter-api:$COMMIT_SHA', '.']
+
+  # Push the Docker image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/saas-starter-api:$COMMIT_SHA']
+
+  # Deploy to Cloud Run
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args:
+      - 'run'
+      - 'deploy'
+      - 'saas-starter-api'
+      - '--image'
+      - 'gcr.io/$PROJECT_ID/saas-starter-api:$COMMIT_SHA'
+      - '--region'
+      - 'us-central1'
+      - '--platform'
+      - 'managed'
+      - '--allow-unauthenticated'
+      - '--max-instances'
+      - '10'
+      - '--memory'
+      - '512Mi'
+
+images:
+  - 'gcr.io/$PROJECT_ID/saas-starter-api:$COMMIT_SHA'
+
+options:
+  logging: CLOUD_LOGGING_ONLY

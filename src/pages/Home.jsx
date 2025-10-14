@@ -1,43 +1,48 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Download, Linkedin, Github, Mail } from 'lucide-react';
+import { ArrowRight, Download, Linkedin, Github, Mail, BarChart3, CheckCircle, Users, TrendingUp } from 'lucide-react';
 import DemoCard from '../components/DemoCard';
+import { trackPageView, trackDemoCardClick } from '../utils/analytics';
+
+const ANALYTICS_API = 'https://portfolio-analytics-250136281139.us-central1.run.app/api/analytics';
 
 const Home = () => {
+  const [analytics, setAnalytics] = useState(null);
+
   const demos = [
     {
-      title: 'Stripe Payment Integration',
-      description: 'Comprehensive guide to integrating Stripe API for payment processing, including webhooks, subscription management, and error handling for seamless customer transactions.',
-      tags: ['FastAPI', 'Stripe API', 'React', 'Webhooks'],
-      path: '/demos/stripe-integration',
-      gradient: 'linear-gradient(135deg, #635BFF 0%, #8B85FF 100%)',
+      title: 'Interactive API Explorer',
+      description: 'Live, fully-functional API testing tool built into the portfolio. Test any REST API, see real-time responses, and generate production-ready code in 5 languages. Try it yourself - no setup required, works entirely in your browser.',
+      tags: ['React', 'Axios', 'REST APIs', 'Code Generation', 'Developer Tools'],
+      path: '/demos/api-explorer',
+      gradient: 'linear-gradient(135deg, #06B6D4 0%, #3B82F6 100%)',
+      badges: ['⚡ Interactive Tool', '🔨 Try It Live'],
+      interactive: true,
+      flagship: true,
+      stats: 'Supports 5 Languages • Test Any API • Instant Results',
+      ctaText: 'Try It Now',
     },
     {
-      title: 'GCP Cloud Architecture',
-      description: 'End-to-end cloud-native architecture design on Google Cloud Platform, featuring Cloud Run, Firestore, and automated CI/CD for scalable, cost-optimized applications.',
-      tags: ['GCP', 'Cloud Run', 'Firestore', 'Docker'],
+      title: 'GCP Cloud Architecture Guide',
+      description: 'Production-backed cloud architecture guide with real Cloud Run deployment. Complete reference architecture, service selection strategies, scaling patterns, and cost optimization. Includes live GCP console screenshots and working demo infrastructure.',
+      tags: ['Cloud Run', 'GCP', 'Firestore', 'Docker', 'Kubernetes', 'CI/CD', 'PostgreSQL'],
       path: '/demos/gcp-architecture',
+      image: '/images/demos/gcp/gcp-cloud-run-dashboard.png',
       gradient: 'linear-gradient(135deg, #4285F4 0%, #34A853 100%)',
+      badges: ['🚀 Live Deployment', '📸 Real Screenshots'],
+      featured: true,
+      flagship: true,
+      stats: '4 Mermaid Diagrams • 4 GCP Screenshots • Live Deployment',
+      ctaText: 'Explore Architecture',
     },
     {
-      title: 'Customer Onboarding Automation',
-      description: 'Automated workflow system for streamlining customer onboarding processes, integrating CRM systems, email campaigns, and task management for improved customer success.',
-      tags: ['Automation', 'n8n', 'CRM', 'APIs'],
-      path: '/demos/onboarding-automation',
-      gradient: 'linear-gradient(135deg, #FF6B6B 0%, #FFB347 100%)',
-    },
-    {
-      title: 'Customer Health Score Dashboard',
-      description: 'Real-time analytics dashboard visualizing customer engagement metrics, usage patterns, and health scores to proactively identify at-risk accounts and expansion opportunities.',
-      tags: ['React', 'Recharts', 'Analytics', 'Dashboard'],
-      path: '/demos/customer-health-dashboard',
-      gradient: 'linear-gradient(135deg, #667EEA 0%, #764BA2 100%)',
-    },
-    {
-      title: 'Roamio Platform Technical Deep Dive',
-      description: 'Full-stack travel planning platform featuring AI-powered itinerary generation, real-time collaboration, Google Maps integration, and responsive mobile-first design.',
-      tags: ['FastAPI', 'React', 'Docker', 'GPT-4', 'Google Maps'],
-      path: '/demos/roamio-platform',
-      gradient: 'linear-gradient(135deg, #3D5A3C 0%, #9CAF88 100%)',
+      title: 'Stripe Payment Integration',
+      description: 'Production-ready payment processing with FastAPI backend and React frontend. Features secure webhook handling, real-time event processing, and comprehensive error recovery. Includes working demo, full source code, and complete documentation.',
+      tags: ['FastAPI', 'Stripe API', 'React', 'Webhooks', 'Python', 'Docker'],
+      path: '/demos/stripe-integration',
+      image: '/images/demos/stripe/checkout-empty.png',
+      badges: ['✓ Live Demo'],
+      ctaText: 'View Demo',
     },
   ];
 
@@ -52,6 +57,30 @@ const Home = () => {
     'GCP Professional Cloud Architect',
     'CompTIA A+',
   ];
+
+  // Track page view on mount
+  useEffect(() => {
+    trackPageView('Home');
+  }, []);
+
+  // Fetch analytics data
+  useEffect(() => {
+    const fetchAnalytics = async () => {
+      try {
+        const response = await fetch(`${ANALYTICS_API}/summary`);
+        const data = await response.json();
+        setAnalytics(data.data);
+      } catch (err) {
+        console.error('Failed to fetch analytics preview', err);
+      }
+    };
+
+    fetchAnalytics();
+
+    // Refresh every 60 seconds
+    const interval = setInterval(fetchAnalytics, 60000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -87,6 +116,13 @@ const Home = () => {
               <span>Download Resume</span>
             </a>
           </div>
+
+          {/* Privacy Banner */}
+          <div className="mt-12 text-center">
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              📊 This portfolio tracks anonymous usage data to demonstrate analytics capabilities. No personal information is collected.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -106,6 +142,93 @@ const Home = () => {
             {demos.map((demo, index) => (
               <DemoCard key={index} {...demo} />
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Live Portfolio Analytics Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-accent/5 via-primary/5 to-secondary/5 dark:from-accent/10 dark:via-primary/10 dark:to-secondary/10 border-y border-neutral/20">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12">
+            {/* Real-time badge */}
+            <div className="inline-flex items-center space-x-2 px-4 py-2 bg-green-500/10 dark:bg-green-400/10 border border-green-500/30 dark:border-green-400/30 rounded-full mb-6">
+              <div className="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full animate-pulse"></div>
+              <span className="text-green-700 dark:text-green-300 font-semibold text-sm">Tracking in Real-Time</span>
+            </div>
+
+            {/* Icon and Title */}
+            <div className="flex items-center justify-center space-x-3 mb-4">
+              <BarChart3 size={40} className="text-accent dark:text-accent-light" />
+              <h2 className="text-4xl sm:text-5xl font-bold text-light-text dark:text-dark-text">
+                Live Portfolio Analytics
+              </h2>
+            </div>
+
+            <h3 className="text-2xl font-bold text-primary dark:text-secondary mb-4">
+              This Portfolio Tracks Itself
+            </h3>
+
+            <p className="text-lg text-neutral max-w-3xl mx-auto leading-relaxed">
+              Every interaction with this portfolio is measured. See how visitors engage with demos, test APIs,
+              and explore projects - all in real-time with anonymous, privacy-first tracking.
+            </p>
+          </div>
+
+          {/* Metrics Preview Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            {/* API Calls Card */}
+            <div className="bg-light-bg dark:bg-dark-bg rounded-xl p-8 shadow-lg border-2 border-primary/20 dark:border-secondary/20 hover:shadow-2xl hover:scale-105 transition-all">
+              <div className="text-center">
+                <TrendingUp size={40} className="text-primary dark:text-secondary mx-auto mb-4" />
+                <div className="text-5xl font-bold text-light-text dark:text-dark-text mb-2">
+                  {analytics?.api_calls || 0}
+                </div>
+                <div className="text-sm font-semibold text-neutral uppercase tracking-wide">
+                  API Calls
+                </div>
+              </div>
+            </div>
+
+            {/* Success Rate Card */}
+            <div className="bg-light-bg dark:bg-dark-bg rounded-xl p-8 shadow-lg border-2 border-green-500/20 dark:border-green-400/20 hover:shadow-2xl hover:scale-105 transition-all">
+              <div className="text-center">
+                <CheckCircle size={40} className="text-green-600 dark:text-green-400 mx-auto mb-4" />
+                <div className="text-5xl font-bold text-light-text dark:text-dark-text mb-2">
+                  {analytics?.api_success_rate || 0}%
+                </div>
+                <div className="text-sm font-semibold text-neutral uppercase tracking-wide">
+                  Success Rate
+                </div>
+              </div>
+            </div>
+
+            {/* Visitors Card */}
+            <div className="bg-light-bg dark:bg-dark-bg rounded-xl p-8 shadow-lg border-2 border-accent/20 dark:border-accent-light/20 hover:shadow-2xl hover:scale-105 transition-all">
+              <div className="text-center">
+                <Users size={40} className="text-accent dark:text-accent-light mx-auto mb-4" />
+                <div className="text-5xl font-bold text-light-text dark:text-dark-text mb-2">
+                  {analytics?.unique_visitors || 0}
+                </div>
+                <div className="text-sm font-semibold text-neutral uppercase tracking-wide">
+                  Unique Visitors
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="text-center">
+            <Link
+              to="/analytics"
+              className="inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-accent to-accent-dark hover:from-accent-dark hover:to-accent text-white dark:text-dark-bg rounded-full font-bold text-lg shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all"
+            >
+              <BarChart3 size={24} />
+              <span>View Full Dashboard</span>
+              <ArrowRight size={24} />
+            </Link>
+            <p className="text-sm text-neutral mt-4">
+              See detailed metrics, charts, and insights about portfolio engagement
+            </p>
           </div>
         </div>
       </section>

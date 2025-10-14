@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Sun, Moon, ChevronDown } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
+import { trackClick } from '../utils/analytics';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,6 +27,7 @@ const Navigation = () => {
           {/* Logo/Name */}
           <Link
             to="/"
+            onClick={() => trackClick('navigation', 'logo')}
             className="text-xl font-bold text-primary dark:text-secondary hover:opacity-80"
           >
             Gavin Kelly
@@ -35,6 +37,7 @@ const Navigation = () => {
           <div className="hidden md:flex items-center space-x-8">
             <Link
               to="/"
+              onClick={() => trackClick('navigation', 'home_link')}
               className={`font-medium hover:text-primary dark:hover:text-secondary ${
                 isActive('/') ? 'text-primary dark:text-secondary' : ''
               }`}
@@ -70,6 +73,7 @@ const Navigation = () => {
 
             <Link
               to="/about"
+              onClick={() => trackClick('navigation', 'about_link')}
               className={`font-medium hover:text-primary dark:hover:text-secondary ${
                 isActive('/about') ? 'text-primary dark:text-secondary' : ''
               }`}
