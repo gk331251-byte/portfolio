@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Zap, CheckCircle, Lock, AlertTriangle } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { trackPageView } from '../../utils/analytics';
+import { trackPageView, trackDemoViewed } from '../../utils/analytics';
 
 const StripeIntegration = () => {
   const [openAccordion, setOpenAccordion] = useState(null);
@@ -355,6 +355,7 @@ STRIPE_WEBHOOK_SECRET=whsec_...  # From Stripe Dashboard
   // Track page view on mount
   useEffect(() => {
     trackPageView('Stripe Integration');
+    trackDemoViewed('Stripe Integration');
   }, []);
 
   return (

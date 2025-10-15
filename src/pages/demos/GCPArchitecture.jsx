@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Zap, TrendingUp, DollarSign, Shield, CheckCircle, Server, Database, Gauge, Lock, Eye, Workflow, AlertTriangle, Copy, Check } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import MermaidDiagram from '../../components/MermaidDiagram';
-import { trackPageView } from '../../utils/analytics';
+import { trackPageView, trackDemoViewed } from '../../utils/analytics';
 
 const GCPArchitecture = () => {
   const [activeTab, setActiveTab] = useState('compute');
@@ -188,6 +188,7 @@ const GCPArchitecture = () => {
   // Track page view on mount
   useEffect(() => {
     trackPageView('GCP Architecture');
+    trackDemoViewed('GCP Architecture');
   }, []);
 
   return (

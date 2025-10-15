@@ -372,6 +372,8 @@ function ActivityItem({ event }) {
         return `🎯 Tried example: ${event.demo_name}`;
       case 'demo_clicked':
         return `🎪 Clicked demo: ${event.demo_name}`;
+      case 'demo_viewed':
+        return `👀 Viewing demo: ${event.demo_name}`;
       case 'click':
         return `👆 Clicked: ${event.label || event.element}`;
       default:

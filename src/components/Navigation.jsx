@@ -16,8 +16,6 @@ const Navigation = () => {
     { name: 'Stripe Integration', path: '/demos/stripe-integration' },
     { name: 'GCP Architecture', path: '/demos/gcp-architecture' },
     { name: 'Onboarding Automation', path: '/demos/onboarding-automation' },
-    { name: 'Customer Health Dashboard', path: '/demos/customer-health-dashboard' },
-    { name: 'Roamio Platform', path: '/demos/roamio-platform' },
   ];
 
   return (

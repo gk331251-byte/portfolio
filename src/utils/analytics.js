@@ -124,3 +124,11 @@ export const trackDemoCardClick = (demoName) => {
     demo_name: demoName
   });
 };
+
+// Track demo page views (when user actually views a demo)
+export const trackDemoViewed = (demoName) => {
+  trackEvent({
+    event_type: 'demo_viewed',
+    demo_name: demoName
+  });
+};

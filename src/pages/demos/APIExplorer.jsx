@@ -4,7 +4,7 @@ import { ArrowLeft, Send, Plus, X, Code, Zap, Copy, Loader2, AlertCircle, CheckC
 import axios from 'axios';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { vscDarkPlus } from 'react-syntax-highlighter/dist/esm/styles/prism';
-import { trackAPIRequest, trackCodeCopied, trackExampleClicked, trackPageView } from '../../utils/analytics';
+import { trackAPIRequest, trackCodeCopied, trackExampleClicked, trackPageView, trackDemoViewed } from '../../utils/analytics';
 
 const APIExplorer = () => {
   const [method, setMethod] = useState('GET');
@@ -449,6 +449,7 @@ const APIExplorer = () => {
   // Track page view on mount
   useEffect(() => {
     trackPageView('API Explorer');
+    trackDemoViewed('API Explorer');
   }, []);
 
   return (

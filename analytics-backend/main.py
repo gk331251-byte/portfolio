@@ -125,7 +125,8 @@ async def get_analytics_summary():
         api_calls = 0
         api_successes = 0
         unique_sessions = set()
-        demo_interactions = {}
+        demo_views = {}
+        demo_clicks = {}
         page_views = 0
 
         # Process events
@@ -141,9 +142,15 @@ async def get_analytics_summary():
             elif event_data.get("event_type") == "page_view":
                 page_views += 1
 
-            elif event_data.get("event_type") == "demo_interaction":
-                demo_name = event_data.get("demo_name", "Unknown")
-                demo_interactions[demo_name] = demo_interactions.get(demo_name, 0) + 1
+            elif event_data.get("event_type") == "demo_viewed":
+                demo_name = event_data.get("demo_name")
+                if demo_name:
+                    demo_views[demo_name] = demo_views.get(demo_name, 0) + 1
+
+            elif event_data.get("event_type") == "demo_clicked":
+                demo_name = event_data.get("demo_name")
+                if demo_name:
+                    demo_clicks[demo_name] = demo_clicks.get(demo_name, 0) + 1
 
             # Track unique sessions
             if event_data.get("session_id"):
@@ -152,10 +159,22 @@ async def get_analytics_summary():
         # Calculate success rate
         api_success_rate = round((api_successes / api_calls * 100), 1) if api_calls > 0 else 0
 
-        # Sort demos by popularity
-        popular_demos = sorted(
-            demo_interactions.items(),
-            key=lambda x: x[1],
+        # Combine views and clicks for popularity score
+        popular_demos = {}
+        for demo in set(list(demo_views.keys()) + list(demo_clicks.keys())):
+            views = demo_views.get(demo, 0)
+            clicks = demo_clicks.get(demo, 0)
+            popular_demos[demo] = {
+                'name': demo,
+                'views': views,
+                'clicks': clicks,
+                'total_interactions': views + clicks
+            }
+
+        # Sort by total interactions
+        popular_demos_sorted = sorted(
+            popular_demos.values(),
+            key=lambda x: x['total_interactions'],
             reverse=True
         )[:5]  # Top 5 demos
 
@@ -168,10 +187,7 @@ async def get_analytics_summary():
                 "api_success_rate": api_success_rate,
                 "unique_visitors": len(unique_sessions),
                 "page_views": page_views,
-                "popular_demos": [
-                    {"name": name, "interactions": count}
-                    for name, count in popular_demos
-                ],
+                "popular_demos": popular_demos_sorted,
             }
         }
 
