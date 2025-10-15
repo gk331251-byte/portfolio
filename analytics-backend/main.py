@@ -13,7 +13,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",  # Local development
-        "https://your-portfolio-domain.com",  # Production domain (update this)
+        "https://gkellyportfolio.vercel.app",  
     ],
     allow_credentials=True,
     allow_methods=["*"],
