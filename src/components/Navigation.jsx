@@ -81,6 +81,16 @@ const Navigation = () => {
               About
             </Link>
 
+            <Link
+              to="/analytics"
+              onClick={() => trackClick('navigation', 'analytics_link')}
+              className={`font-medium hover:text-primary dark:hover:text-secondary ${
+                isActive('/analytics') ? 'text-primary dark:text-secondary' : ''
+              }`}
+            >
+              Analytics
+            </Link>
+
             {/* Dark Mode Toggle */}
             <button
               onClick={toggleTheme}
@@ -150,6 +160,16 @@ const Navigation = () => {
               }`}
             >
               About
+            </Link>
+
+            <Link
+              to="/analytics"
+              onClick={() => setIsOpen(false)}
+              className={`block py-2 font-medium ${
+                isActive('/analytics') ? 'text-primary dark:text-secondary' : ''
+              }`}
+            >
+              Analytics
             </Link>
           </div>
         </div>

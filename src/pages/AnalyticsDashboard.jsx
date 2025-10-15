@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, BarChart3, TrendingUp, CheckCircle, Users, Activity } from 'lucide-react';
 import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
+import { API_CONFIG } from '../config/api';
 
-const ANALYTICS_API = 'https://portfolio-analytics-250136281139.us-central1.run.app/api/analytics';
+const ANALYTICS_API = `${API_CONFIG.analyticsBackend}/api/analytics`;
 
 export default function AnalyticsDashboard() {
   const [summary, setSummary] = useState(null);

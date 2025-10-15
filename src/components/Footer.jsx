@@ -43,7 +43,7 @@ const Footer = () => {
             <h3 className="text-lg font-bold mb-4 text-secondary">Connect</h3>
             <div className="flex space-x-4">
               <a
-                href="https://linkedin.com/in/gavin-kelly"
+                href="https://www.linkedin.com/in/gavin-kelly1/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 bg-secondary/10 rounded-full hover:bg-secondary/20 transition-colors"
@@ -52,7 +52,7 @@ const Footer = () => {
                 <Linkedin size={20} />
               </a>
               <a
-                href="https://github.com/gavinkelly"
+                href="https://github.com/gk331251-byte"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 bg-secondary/10 rounded-full hover:bg-secondary/20 transition-colors"

@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Download, Linkedin, Github, Mail, BarChart3, CheckCircle, Users, TrendingUp } from 'lucide-react';
 import DemoCard from '../components/DemoCard';
 import { trackPageView, trackDemoCardClick } from '../utils/analytics';
+import { API_CONFIG } from '../config/api';
 
-const ANALYTICS_API = 'https://portfolio-analytics-250136281139.us-central1.run.app/api/analytics';
+const ANALYTICS_API = `${API_CONFIG.analyticsBackend}/api/analytics`;
 
 const Home = () => {
   const [analytics, setAnalytics] = useState(null);
@@ -109,7 +110,10 @@ const Home = () => {
               <ArrowRight size={20} />
             </a>
             <a
-              href="/resume.pdf"
+              href="/images/demos/resume/Resume-GavinKelly.pdf"
+              download="Gavin_Kelly_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center justify-center space-x-2 px-8 py-4 border-2 border-primary dark:border-secondary text-primary dark:text-secondary rounded-full font-bold hover:bg-primary/10 dark:hover:bg-secondary/10 transition-colors"
             >
               <Download size={20} />
@@ -293,7 +297,7 @@ const Home = () => {
 
           <div className="flex justify-center space-x-6">
             <a
-              href="https://linkedin.com/in/gavin-kelly"
+              href="https://www.linkedin.com/in/gavin-kelly1/"
               target="_blank"
               rel="noopener noreferrer"
               className="group flex flex-col items-center space-y-2"
@@ -307,7 +311,7 @@ const Home = () => {
             </a>
 
             <a
-              href="https://github.com/gavinkelly"
+              href="https://github.com/gk331251-byte"
               target="_blank"
               rel="noopener noreferrer"
               className="group flex flex-col items-center space-y-2"

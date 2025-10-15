@@ -1,6 +1,7 @@
 // Portfolio Analytics Tracking
+import { API_CONFIG, isAnalyticsConfigured } from '../config/api';
 
-const ANALYTICS_ENDPOINT = 'https://portfolio-analytics-250136281139.us-central1.run.app/api/track';
+const ANALYTICS_ENDPOINT = `${API_CONFIG.analyticsBackend}/api/track`;
 
 // Generate anonymous session ID
 const getSessionId = () => {
@@ -15,9 +16,9 @@ const getSessionId = () => {
 // Track event
 export const trackEvent = async (eventData) => {
   try {
-    // Don't track in development
-    if (import.meta.env.DEV) {
-      console.log('[Analytics - DEV]', eventData);
+    // Don't track if analytics not configured or in development
+    if (!isAnalyticsConfigured() || import.meta.env.DEV) {
+      console.log('[Analytics]', eventData);
       return;
     }
 
