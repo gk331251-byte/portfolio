@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowLeft, BarChart3, TrendingUp, CheckCircle, Users, Activity } from 'lucide-react';
 import { PieChart, Pie, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell } from 'recharts';
 import { API_CONFIG } from '../config/api';
+import { debugAnalytics } from '../utils/analyticsDebug';
 
 const ANALYTICS_API = `${API_CONFIG.analyticsBackend}/api/analytics`;
 
@@ -10,6 +11,8 @@ export default function AnalyticsDashboard() {
   const [summary, setSummary] = useState(null);
   const [realtimeEvents, setRealtimeEvents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [debugInfo, setDebugInfo] = useState(null);
+  const [testingConnection, setTestingConnection] = useState(false);
 
   // Fetch summary data
   useEffect(() => {
@@ -51,6 +54,23 @@ export default function AnalyticsDashboard() {
     return () => clearInterval(interval);
   }, []);
 
+  // Run diagnostics function
+  const runDiagnostics = async () => {
+    setTestingConnection(true);
+    const backendUrl = API_CONFIG.analyticsBackend;
+
+    const results = {
+      backendConfigured: !!backendUrl,
+      backendUrl: backendUrl,
+      connectionTest: await debugAnalytics.testBackendConnection(backendUrl),
+      firestoreTest: await debugAnalytics.testFirestoreWrite(backendUrl),
+      summaryTest: await debugAnalytics.testAnalyticsSummary(backendUrl)
+    };
+
+    setDebugInfo(results);
+    setTestingConnection(false);
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-light-bg dark:bg-dark-bg">
@@ -82,6 +102,71 @@ export default function AnalyticsDashboard() {
           <ArrowLeft size={20} />
           <span className="font-medium">Back to Home</span>
         </Link>
+
+        {/* Debug Panel - Only in Development */}
+        {import.meta.env.DEV && (
+          <div className="mb-8 p-6 bg-yellow-50 dark:bg-yellow-900/20 border-2 border-yellow-400 rounded-lg">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-yellow-900 dark:text-yellow-200">
+                🔧 Analytics Diagnostics (Dev Only)
+              </h3>
+              <button
+                onClick={runDiagnostics}
+                disabled={testingConnection}
+                className="px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 disabled:opacity-50 disabled:cursor-not-allowed font-semibold"
+              >
+                {testingConnection ? 'Testing...' : 'Run Diagnostics'}
+              </button>
+            </div>
+
+            {debugInfo && (
+              <div className="space-y-2 text-sm font-mono">
+                <div className="flex items-center gap-2">
+                  <span className={debugInfo.backendConfigured ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+                    {debugInfo.backendConfigured ? '✓' : '✗'}
+                  </span>
+                  <span className="text-gray-900 dark:text-gray-100">
+                    Backend URL: {debugInfo.backendUrl || 'NOT CONFIGURED'}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className={debugInfo.connectionTest?.success ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+                    {debugInfo.connectionTest?.success ? '✓' : '✗'}
+                  </span>
+                  <span className="text-gray-900 dark:text-gray-100">
+                    Connection: {debugInfo.connectionTest?.message}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className={debugInfo.firestoreTest ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+                    {debugInfo.firestoreTest ? '✓' : '✗'}
+                  </span>
+                  <span className="text-gray-900 dark:text-gray-100">
+                    Firestore Write: {debugInfo.firestoreTest ? 'Working' : 'Failed'}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span className={debugInfo.summaryTest ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}>
+                    {debugInfo.summaryTest ? '✓' : '✗'}
+                  </span>
+                  <span className="text-gray-900 dark:text-gray-100">
+                    Summary Endpoint: {debugInfo.summaryTest ? 'Working' : 'Failed'}
+                  </span>
+                </div>
+
+                {debugInfo.summaryTest && (
+                  <div className="mt-4 p-3 bg-gray-100 dark:bg-gray-800 rounded overflow-auto max-h-96">
+                    <strong className="text-gray-900 dark:text-gray-100">Current Data:</strong>
+                    <pre className="text-xs mt-2 text-gray-800 dark:text-gray-200">{JSON.stringify(debugInfo.summaryTest, null, 2)}</pre>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Header */}
         <div className="mb-8">

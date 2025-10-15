@@ -1,5 +1,6 @@
 // Portfolio Analytics Tracking
 import { API_CONFIG, isAnalyticsConfigured } from '../config/api';
+import { debugAnalytics } from './analyticsDebug';
 
 const ANALYTICS_ENDPOINT = `${API_CONFIG.analyticsBackend}/api/track`;
 
@@ -15,10 +16,17 @@ const getSessionId = () => {
 
 // Track event
 export const trackEvent = async (eventData) => {
+  debugAnalytics.log('Tracking event:', eventData);
+
   try {
     // Don't track if analytics not configured or in development
-    if (!isAnalyticsConfigured() || import.meta.env.DEV) {
-      console.log('[Analytics]', eventData);
+    if (!isAnalyticsConfigured()) {
+      debugAnalytics.log('Analytics not configured, skipping');
+      return;
+    }
+
+    if (import.meta.env.DEV) {
+      debugAnalytics.log('Skipping track in DEV mode');
       return;
     }
 
@@ -32,18 +40,26 @@ export const trackEvent = async (eventData) => {
       screen_height: window.innerHeight
     };
 
-    // Send to backend (fire and forget)
-    fetch(ANALYTICS_ENDPOINT, {
+    debugAnalytics.log('Sending to backend:', ANALYTICS_ENDPOINT);
+    debugAnalytics.log('Payload:', payload);
+
+    // Send to backend
+    const response = await fetch(ANALYTICS_ENDPOINT, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
       keepalive: true // Send even if user navigates away
-    }).catch(() => {
-      // Fail silently - analytics shouldn't break UX
     });
 
+    if (response.ok) {
+      debugAnalytics.log('Event tracked successfully');
+    } else {
+      const errorText = await response.text();
+      debugAnalytics.error('Track failed:', errorText);
+    }
+
   } catch (err) {
-    // Fail silently
+    debugAnalytics.error('Track error:', err);
   }
 };
 
