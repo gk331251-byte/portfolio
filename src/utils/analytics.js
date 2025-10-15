@@ -118,15 +118,21 @@ export const trackClick = (element, label) => {
   });
 };
 
-export const trackDemoCardClick = (demoName) => {
+// Track when user clicks demo card from homepage
+export const trackDemoClicked = (demoName) => {
+  console.log('🎯 Demo clicked:', demoName);
   trackEvent({
     event_type: 'demo_clicked',
     demo_name: demoName
   });
 };
 
-// Track demo page views (when user actually views a demo)
+// Alias for backward compatibility
+export const trackDemoCardClick = trackDemoClicked;
+
+// Track when user views a demo page
 export const trackDemoViewed = (demoName) => {
+  console.log('👁️ Demo viewed:', demoName);
   trackEvent({
     event_type: 'demo_viewed',
     demo_name: demoName

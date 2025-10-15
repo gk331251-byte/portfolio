@@ -85,7 +85,7 @@ export default function AnalyticsDashboard() {
   // Prepare chart data
   const demoData = (summary?.popular_demos || []).map(demo => ({
     name: demo.name,
-    interactions: demo.interactions
+    interactions: demo.total_interactions || demo.interactions || 0
   }));
 
   const COLORS = ['#3D5A3C', '#9CAF88', '#B8C9A8', '#C8D5C0', '#D8E1D8'];
@@ -263,7 +263,7 @@ export default function AnalyticsDashboard() {
               />
               <EventBar
                 label="Demo Interactions"
-                value={summary?.popular_demos?.reduce((sum, demo) => sum + demo.interactions, 0) || 0}
+                value={summary?.popular_demos?.reduce((sum, demo) => sum + (demo.total_interactions || demo.interactions || 0), 0) || 0}
                 max={summary?.total_events || 1}
                 color="bg-green-500 dark:bg-green-400"
               />
@@ -309,7 +309,7 @@ export default function AnalyticsDashboard() {
             </li>
             {summary?.popular_demos && summary.popular_demos.length > 0 && (
               <li>
-                • <strong>Most Popular Demo:</strong> {summary.popular_demos[0].name} ({summary.popular_demos[0].interactions} interactions)
+                • <strong>Most Popular Demo:</strong> {summary.popular_demos[0].name} ({summary.popular_demos[0].total_interactions || summary.popular_demos[0].interactions || 0} interactions)
               </li>
             )}
           </ul>
