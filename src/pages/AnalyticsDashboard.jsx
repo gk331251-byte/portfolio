@@ -361,24 +361,47 @@ function EventBar({ label, value, max, color }) {
 // Activity Item Component
 function ActivityItem({ event }) {
   const getEventDescription = () => {
-    switch (event.event_type) {
-      case 'api_call':
-        return `🚀 API call: ${event.api_method} to ${event.api_endpoint?.substring(0, 50)}...`;
-      case 'code_copied':
-        return `📋 Code copied: ${event.language}`;
-      case 'page_view':
-        return `👁️ Viewed: ${event.page || event.demo_name || 'Unknown page'}`;
-      case 'example_clicked':
-        return `🎯 Tried example: ${event.demo_name}`;
-      case 'demo_clicked':
-        return `🎪 Clicked demo: ${event.demo_name}`;
-      case 'demo_viewed':
-        return `👀 Viewing demo: ${event.demo_name}`;
-      case 'click':
-        return `👆 Clicked: ${event.label || event.element}`;
-      default:
-        return `📊 ${event.event_type}`;
+    const eventType = event.event_type || 'unknown';
+
+    // Handle each event type with proper fallbacks
+    if (eventType === 'api_call') {
+      const method = event.api_method || 'GET';
+      const url = event.api_endpoint || 'unknown endpoint';
+      return `🚀 API request: ${method} to ${url.substring(0, 50)}${url.length > 50 ? '...' : ''}`;
     }
+
+    if (eventType === 'code_copied') {
+      const language = event.language || 'unknown language';
+      return `📋 Code copied: ${language}`;
+    }
+
+    if (eventType === 'page_view') {
+      const pageName = event.page_name || event.page || event.demo_name || 'unknown page';
+      return `👁️ Viewed: ${pageName}`;
+    }
+
+    if (eventType === 'demo_clicked') {
+      const demoName = event.demo_name || 'a demo';
+      return `🎯 Clicked demo: ${demoName}`;
+    }
+
+    if (eventType === 'demo_viewed') {
+      const demoName = event.demo_name || 'a demo';
+      return `📱 Viewed demo: ${demoName}`;
+    }
+
+    if (eventType === 'example_clicked') {
+      const exampleName = event.example_name || 'an example';
+      return `💡 Tried example: ${exampleName}`;
+    }
+
+    if (eventType === 'click') {
+      const label = event.label || event.element || 'an element';
+      return `👆 Clicked: ${label}`;
+    }
+
+    // Fallback for unknown event types
+    return `📊 Event: ${eventType}`;
   };
 
   const getSuccessIndicator = () => {
@@ -394,10 +417,14 @@ function ActivityItem({ event }) {
 
   const timeAgo = (timestamp) => {
     if (!timestamp) return 'Just now';
-    const seconds = Math.floor((new Date() - new Date(timestamp)) / 1000);
+    const date = new Date(timestamp);
+    if (isNaN(date.getTime())) return 'Just now';
+
+    const seconds = Math.floor((new Date() - date) / 1000);
     if (seconds < 60) return `${seconds}s ago`;
     if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
-    return `${Math.floor(seconds / 3600)}h ago`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)}h ago`;
+    return `${Math.floor(seconds / 86400)}d ago`;
   };
 
   return (

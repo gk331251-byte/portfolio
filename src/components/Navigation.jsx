@@ -13,9 +13,9 @@ const Navigation = () => {
   const isActive = (path) => location.pathname === path;
 
   const demos = [
-    { name: 'Stripe Integration', path: '/demos/stripe-integration' },
-    { name: 'GCP Architecture', path: '/demos/gcp-architecture' },
-    { name: 'Onboarding Automation', path: '/demos/onboarding-automation' },
+    { name: 'Interactive API Explorer', path: '/demos/api-explorer' },
+    { name: 'GCP Cloud Architecture Guide', path: '/demos/gcp-architecture' },
+    { name: 'Stripe Payment Integration', path: '/demos/stripe-integration' },
   ];
 
   return (

@@ -99,7 +99,10 @@ const About = () => {
         {/* Resume Download Button */}
         <div className="mt-16 text-center">
           <a
-            href="/resume.pdf"
+            href="/images/demos/resume/Resume-GavinKelly.pdf"
+            download="Gavin_Kelly_Resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center justify-center space-x-2 px-8 py-4 bg-primary dark:bg-secondary text-white dark:text-dark-bg rounded-full font-bold hover:opacity-90 transition-opacity"
           >
             <Download size={20} />

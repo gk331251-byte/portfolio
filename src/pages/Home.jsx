@@ -325,7 +325,7 @@ const Home = () => {
             </a>
 
             <a
-              href="mailto:gavin@example.com"
+              href="mailto:gavinkelly0113@gmail.com"
               className="group flex flex-col items-center space-y-2"
             >
               <div className="p-6 bg-primary/10 dark:bg-secondary/10 rounded-full group-hover:bg-primary/20 dark:group-hover:bg-secondary/20 transition-colors">

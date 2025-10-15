@@ -1529,10 +1529,10 @@ images:
             <span>Back to Home</span>
           </Link>
           <Link
-            to="/demos/onboarding-automation"
+            to="/demos/stripe-integration"
             className="inline-flex items-center space-x-2 text-primary dark:text-secondary hover:opacity-80 font-medium"
           >
-            <span>Next: Customer Onboarding</span>
+            <span>Next: Stripe Integration</span>
             <ArrowRight size={20} />
           </Link>
         </div>
